@@ -86,6 +86,7 @@ export function InstagramSection() {
                   alt={`Instagram project showcase ${i + 1}`}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 group-hover:rotate-1 filter brightness-[0.95]"
                   loading="lazy"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                 />
 

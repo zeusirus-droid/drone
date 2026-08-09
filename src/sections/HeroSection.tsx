@@ -56,6 +56,8 @@ export function HeroSection() {
               alt="Belmar 3D Creator Portrait"
               className="w-full h-auto object-contain pointer-events-none"
               referrerPolicy="no-referrer"
+              decoding="async"
+              fetchPriority="high"
             />
           </Magnet>
         </FadeIn>

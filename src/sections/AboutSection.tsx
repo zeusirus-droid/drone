@@ -18,6 +18,8 @@ export function AboutSection() {
             alt="Decorative Abstract 3D Object"
             className="w-[100px] sm:w-[140px] md:w-[180px] h-auto object-contain"
             style={{ filter: 'hue-rotate(140deg) saturate(1.5) brightness(1.1)' }}
+            loading="lazy"
+            decoding="async"
             referrerPolicy="no-referrer"
           />
         </FadeIn>

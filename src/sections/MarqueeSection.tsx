@@ -27,18 +27,34 @@ const row2Images = [
   "https://motionsites.ai/assets/hero-celestia-preview-0yO3jXO8.gif"
 ];
 
-const row1Tripled = [...row1Images, ...row1Images, ...row1Images];
-const row2Tripled = [...row2Images, ...row2Images, ...row2Images];
+const row1Duplicated = [...row1Images, ...row1Images];
+const row2Duplicated = [...row2Images, ...row2Images];
 
 export function MarqueeSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const row1Ref = useRef<HTMLDivElement>(null);
   const row2Ref = useRef<HTMLDivElement>(null);
+  const isVisibleRef = useRef<boolean>(false);
 
   useEffect(() => {
     let rafId: number | null = null;
 
+    // Use IntersectionObserver so scroll calculations only run when section is visible
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisibleRef.current = entry.isIntersecting;
+        });
+      },
+      { rootMargin: '200px 0px' }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
     const handleScroll = () => {
+      if (!isVisibleRef.current) return;
       if (rafId) cancelAnimationFrame(rafId);
 
       rafId = requestAnimationFrame(() => {
@@ -48,7 +64,7 @@ export function MarqueeSection() {
         const windowHeight = window.innerHeight;
 
         // Calculate scroll offset based on user scrolled position
-        const scrollOffset = (scrollY - sectionTop + windowHeight) * 0.3;
+        const scrollOffset = (scrollY - sectionTop + windowHeight) * 0.25;
 
         if (row1Ref.current) {
           row1Ref.current.style.transform = `translate3d(${scrollOffset - 200}px, 0px, 0px)`;
@@ -65,6 +81,9 @@ export function MarqueeSection() {
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('scroll', handleScroll);
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
     };
   }, []);
 
@@ -83,13 +102,14 @@ export function MarqueeSection() {
           willChange: 'transform',
         }}
       >
-        {row1Tripled.map((url, i) => (
+        {row1Duplicated.map((url, i) => (
           <img
             key={`r1-${i}`}
             src={url}
             alt={`Creator Portfolio Item Row1-${i}`}
             className="w-[280px] sm:w-[360px] md:w-[420px] h-[180px] sm:h-[230px] md:h-[270px] flex-shrink-0 rounded-2xl object-cover pointer-events-none"
             loading="lazy"
+            decoding="async"
             referrerPolicy="no-referrer"
           />
         ))}
@@ -104,13 +124,14 @@ export function MarqueeSection() {
           willChange: 'transform',
         }}
       >
-        {row2Tripled.map((url, i) => (
+        {row2Duplicated.map((url, i) => (
           <img
             key={`r2-${i}`}
             src={url}
             alt={`Creator Portfolio Item Row2-${i}`}
             className="w-[280px] sm:w-[360px] md:w-[420px] h-[180px] sm:h-[230px] md:h-[270px] flex-shrink-0 rounded-2xl object-cover pointer-events-none"
             loading="lazy"
+            decoding="async"
             referrerPolicy="no-referrer"
           />
         ))}

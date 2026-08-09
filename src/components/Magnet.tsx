@@ -23,10 +23,24 @@ export function Magnet({
       return;
     }
 
+    let isVisible = true;
     let rafId: number | null = null;
 
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting;
+        });
+      },
+      { rootMargin: '100px 0px' }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
     const handleMouseMove = (e: MouseEvent) => {
-      if (!ref.current) return;
+      if (!isVisible || !ref.current) return;
 
       if (rafId) cancelAnimationFrame(rafId);
 
@@ -56,6 +70,7 @@ export function Magnet({
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('mousemove', handleMouseMove);
+      if (ref.current) observer.unobserve(ref.current);
     };
   }, [padding, strength, activeTransition, inactiveTransition]);
 

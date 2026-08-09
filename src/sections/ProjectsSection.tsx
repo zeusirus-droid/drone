@@ -144,6 +144,7 @@ function ProjectCardWrapper({ project, index, totalCards }: ProjectCardWrapperPr
               style={{ height: "clamp(120px, 16vw, 230px)" }}
               referrerPolicy="no-referrer"
               loading="lazy"
+              decoding="async"
             />
             <img
               src={project.col1Image2}
@@ -152,6 +153,7 @@ function ProjectCardWrapper({ project, index, totalCards }: ProjectCardWrapperPr
               style={{ height: "clamp(150px, 22vw, 340px)" }}
               referrerPolicy="no-referrer"
               loading="lazy"
+              decoding="async"
             />
           </div>
 
@@ -163,6 +165,7 @@ function ProjectCardWrapper({ project, index, totalCards }: ProjectCardWrapperPr
               className="w-full h-full object-cover rounded-[20px] sm:rounded-[30px] md:rounded-[40px] lg:rounded-[50px]"
               referrerPolicy="no-referrer"
               loading="lazy"
+              decoding="async"
             />
           </div>
         </div>

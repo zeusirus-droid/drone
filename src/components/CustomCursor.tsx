@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion, useSpring, useMotionValue } from 'motion/react';
 
 export function CustomCursor() {
@@ -6,6 +6,10 @@ export function CustomCursor() {
   const [isVisible, setIsVisible] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isTextInput, setIsTextInput] = useState(false);
+
+  const visibleRef = useRef(false);
+  const hoverRef = useRef(false);
+  const inputRef = useRef(false);
 
   // Set the initial coordinate off-screen so there's no flicker on mount
   const cursorX = useMotionValue(-100);
@@ -22,18 +26,23 @@ export function CustomCursor() {
     const moveCursor = (e: MouseEvent) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
-      setIsVisible(true);
+      if (!visibleRef.current) {
+        visibleRef.current = true;
+        setIsVisible(true);
+      }
     };
 
     const handleMouseLeave = () => {
+      visibleRef.current = false;
       setIsVisible(false);
     };
 
     const handleMouseEnter = () => {
+      visibleRef.current = true;
       setIsVisible(true);
     };
 
-    window.addEventListener('mousemove', moveCursor);
+    window.addEventListener('mousemove', moveCursor, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseenter', handleMouseEnter);
 
@@ -42,31 +51,37 @@ export function CustomCursor() {
       const target = e.target as HTMLElement;
       if (!target) return;
 
-      const isInput =
+      const isInput = Boolean(
         target.tagName === 'INPUT' ||
         target.tagName === 'TEXTAREA' ||
-        target.isContentEditable;
+        target.isContentEditable
+      );
 
-      setIsTextInput(Boolean(isInput));
+      if (inputRef.current !== isInput) {
+        inputRef.current = isInput;
+        setIsTextInput(isInput);
+      }
 
-      if (
+      const hoverState =
         !isInput &&
-        (target.tagName === 'BUTTON' ||
-         target.tagName === 'A' ||
-         target.tagName === 'SELECT' ||
-         target.tagName === 'LABEL' ||
-         target.closest('button') ||
-         target.closest('a') ||
-         target.closest('[role="button"]') ||
-         target.classList.contains('cursor-pointer'))
-      ) {
-        setIsHovering(true);
-      } else {
-        setIsHovering(false);
+        Boolean(
+          target.tagName === 'BUTTON' ||
+          target.tagName === 'A' ||
+          target.tagName === 'SELECT' ||
+          target.tagName === 'LABEL' ||
+          target.closest('button') ||
+          target.closest('a') ||
+          target.closest('[role="button"]') ||
+          target.classList.contains('cursor-pointer')
+        );
+
+      if (hoverRef.current !== hoverState) {
+        hoverRef.current = hoverState;
+        setIsHovering(hoverState);
       }
     };
 
-    window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('mouseover', handleMouseOver, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
@@ -84,7 +99,7 @@ export function CustomCursor() {
   return (
     <motion.div
       id="custom-cursor"
-      className="fixed top-0 left-0 pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 hidden md:block"
+      className="fixed top-0 left-0 pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 hidden md:block will-change-transform"
       style={{
         x,
         y,

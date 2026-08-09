@@ -10,62 +10,51 @@ export function AnimatedText({ text, className = "" }: AnimatedTextProps) {
   const containerRef = useRef<HTMLParagraphElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start 0.8', 'end 0.2'],
+    offset: ['start 0.85', 'end 0.3'],
   });
 
   const words = text.split(" ");
-  const totalChars = text.length;
-  let charCounter = 0;
+  const totalWords = words.length;
 
   return (
     <p id="animated-scroll-text" ref={containerRef} className={className}>
       {words.map((word, wordIdx) => {
-        const wordChars = word.split("");
-        
-        return (
-          <span key={wordIdx} className="inline-block whitespace-nowrap mr-[0.25em]">
-            {wordChars.map((char) => {
-              const charIndex = charCounter++;
-              // Distribute characters over the scroll range (0.0 to 1.0)
-              const start = charIndex / totalChars;
-              const end = Math.min(1.0, start + 0.12); // smooth transition window
+        const start = wordIdx / totalWords;
+        const end = Math.min(1.0, start + 0.15);
 
-              return (
-                <Character
-                  key={charIndex}
-                  char={char}
-                  progress={scrollYProgress}
-                  range={[start, end]}
-                />
-              );
-            })}
-          </span>
+        return (
+          <Word
+            key={wordIdx}
+            word={word}
+            progress={scrollYProgress}
+            range={[start, end]}
+          />
         );
       })}
     </p>
   );
 }
 
-interface CharacterProps {
-  char: string;
+interface WordProps {
+  word: string;
   progress: MotionValue<number>;
   range: [number, number];
   key?: any;
 }
 
-function Character({ char, progress, range }: CharacterProps) {
-  const opacity = useTransform(progress, range, [0.2, 1]);
+function Word({ word, progress, range }: WordProps) {
+  const opacity = useTransform(progress, range, [0.25, 1]);
 
   return (
-    <span className="relative inline-block">
+    <span className="relative inline-block mr-[0.3em] whitespace-nowrap">
       <span className="opacity-0 select-none" aria-hidden="true">
-        {char}
+        {word}
       </span>
       <motion.span
         style={{ opacity }}
         className="absolute top-0 left-0"
       >
-        {char}
+        {word}
       </motion.span>
     </span>
   );
