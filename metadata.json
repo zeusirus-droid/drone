@@ -1,0 +1,6 @@
+{
+  "name": "Belmar Marketing",
+  "description": "A 3D Creator portfolio landing page with custom motion layouts, magnetic hover interactions, and horizontal scroll marquees.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

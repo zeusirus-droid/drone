@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Kanit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Kanit", sans-serif;
+  --font-bebas: "Bebas Neue", sans-serif;
+}
+
+.font-bebas {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+html, body, #root {
+  background-color: #0C0C0C;
+  font-family: 'Kanit', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: #D7E2EA;
+  scroll-behavior: smooth;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+.hero-heading {
+  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (pointer: fine) {
+  html, body, a, button, [role="button"], select, .cursor-pointer {
+    cursor: none !important;
+  }
+  input, textarea {
+    cursor: text !important;
+  }
+}
